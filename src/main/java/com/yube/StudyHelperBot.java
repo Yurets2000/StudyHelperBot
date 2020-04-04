@@ -1,17 +1,21 @@
 package com.yube;
 
+import org.apache.log4j.Logger;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 public class StudyHelperBot extends Bot {
 
+    private static Logger log = Logger.getLogger(StudyHelperBot.class.getName());
+
     public static void main(String[] args) {
         if(args == null || args.length != 2){
-            System.out.println("You must run bot with 2 args - BotToken and BotName");
+            log.error("You must run bot with 2 args - BotToken and BotName");
         } else {
             ApiContextInitializer.init();
             Bot.runBot(new StudyHelperBot(args[0], args[1]));
+            log.error("Bot started successfully");
         }
     }
 
@@ -21,11 +25,12 @@ public class StudyHelperBot extends Bot {
 
     @Override
     protected void processTheException(Exception e) {
-        e.printStackTrace();
+        log.error(e.getMessage(), e);
     }
 
     @Override
     public void onUpdateReceived(Update update) {
+        log.debug("Update received");
         if (update.hasMessage() && update.getMessage().hasText()) {
             Message message = update.getMessage();
             long chatId = message.getChatId();
