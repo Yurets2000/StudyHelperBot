@@ -1,5 +1,5 @@
-def IMAGE_NAME="jenkins-pipeline"
-def CONTAINER_NAMES=["bot-container-1", "container-2"]
+def IMAGE_NAME="study-helper-bot"
+def CONTAINER_NAMES=["bot-container-1", "bot-container-2"]
 def CONTAINER_ARGS_MAP=["bot-container-1":["1020755763:AAFB0c6uCLDBGcmIXf0ZZeLnqecG2SIjsZY", "StudyHelperBot"],
                         "bot-container-2":["1095393713:AAFplKsXVWmtJmxQxU14lubZvjNntw4jdbg", "StudyHelperBot2"]]
 
