@@ -65,6 +65,6 @@ def pushToImage(imageName, tag, dockerUser, dockerPassword){
 
 def runApp(containerName, arg0, arg1, imageName, tag, dockerHubUser){
     sh "docker pull $dockerHubUser/$imageName"
-    sh "docker run -d --rm --name $containerName $dockerHubUser/$imageName:$tag --arg0=$arg0 --arg1=$arg1"
+    sh "docker run --rm --name $containerName $dockerHubUser/$imageName:$tag --arg0=$arg0 --arg1=$arg1"
     echo "$containerName started"
 }
