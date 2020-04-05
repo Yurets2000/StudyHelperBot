@@ -73,6 +73,7 @@ def imagePull(imageName, dockerHubUser){
 }
 
 def runApp(containerName, arg0, arg1, imageName, tag, dockerHubUser){
+    sh "docker stop $containerName || true && docker rm $containerName || true"
     sh "docker run -d --rm --name $containerName $dockerHubUser/$imageName:$tag $arg0 $arg1"
     echo "$containerName started"
 }
