@@ -1,15 +1,9 @@
-FROM maven:3-alpine
+FROM openjdk:8-jdk-alpine
 
-ARG JAR_FILE=/pipeline/target/study-helper-bot.jar
-ARG JAR_LIB_FILE=/pipeline/target/lib/
-
-COPY pom.xml pipeline/
-
-COPY src/ pipeline/src/
+ARG JAR_FILE=target/study-helper-bot.jar
+ARG JAR_LIB_FILE=target/lib/
 
 WORKDIR pipeline/
-
-RUN mvn clean install
 
 COPY ${JAR_FILE} app.jar
 

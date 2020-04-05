@@ -1,14 +1,13 @@
 package com.yube;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 public class StudyHelperBot extends Bot {
 
-    private static Logger log = LogManager.getLogger(StudyHelperBot.class.getName());
+    private static Logger log = Logger.getLogger(StudyHelperBot.class.getName());
 
     public static void main(String[] args) {
         if(args == null || args.length != 2){
@@ -16,7 +15,7 @@ public class StudyHelperBot extends Bot {
         } else {
             ApiContextInitializer.init();
             Bot.runBot(new StudyHelperBot(args[0], args[1]));
-            log.error("Bot started successfully");
+            log.info("Bot started successfully");
         }
     }
 
