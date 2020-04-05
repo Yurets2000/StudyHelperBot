@@ -19,7 +19,7 @@ node {
     }
 
     stage('Build'){
-        sh "mvn package"
+        sh "mvn clean package"
     }
 
     stage("Image Prune"){
@@ -34,6 +34,10 @@ node {
         withCredentials([usernamePassword(credentialsId: 'dockerHubAccount', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
             pushToImage(IMAGE_NAME, IMAGE_TAG, USERNAME, PASSWORD)
         }
+    }
+
+    stage('Pull updated Image'){
+        imagePull(IMAGE_NAME, DOCKER_HUB_USER)
     }
 
     stage('Run App'){
@@ -63,8 +67,12 @@ def pushToImage(imageName, tag, dockerUser, dockerPassword){
     echo "Image push complete"
 }
 
-def runApp(containerName, arg0, arg1, imageName, tag, dockerHubUser){
+def imagePull(imageName, dockerHubUser){
     sh "docker pull $dockerHubUser/$imageName"
+    echo "Updated image pulled"
+}
+
+def runApp(containerName, arg0, arg1, imageName, tag, dockerHubUser){
     sh "docker run -d --rm --name $containerName $dockerHubUser/$imageName:$tag $arg0 $arg1"
     echo "$containerName started"
 }
