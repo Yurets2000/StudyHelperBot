@@ -17,29 +17,29 @@ node {
     stage('Checkout') {
         checkout scm
     }
-
+    /*Перебудувати проект та сформувати jar-файл*/
     stage('Build'){
         sh "mvn clean package"
     }
-
+    /*Видалити зображення, якщо воно не використовується ні одним контейнером*/
     stage("Image Prune"){
         imagePrune(IMAGE_NAME)
     }
-
+    /*Сформувати нове зображення*/
     stage('Image Build'){
         imageBuild(IMAGE_NAME, IMAGE_TAG)
     }
-
+    /*Внести нове зображення до Docker Registry*/
     stage('Push to Docker Registry'){
         withCredentials([usernamePassword(credentialsId: 'dockerHubAccount', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
             pushToImage(IMAGE_NAME, IMAGE_TAG, USERNAME, PASSWORD)
         }
     }
-
+    /*Отримати оновлене зображення*/
     stage('Pull updated Image'){
         imagePull(IMAGE_NAME, DOCKER_HUB_USER)
     }
-
+    /*Зупинити та видалити контейнери, які використовували застаріле зображення, та запустити ботів на контейнерах з оновленим зображенням*/
     stage('Run App'){
         CONTAINER_NAMES.each{ item ->
             runApp(item, CONTAINER_ARGS_MAP.get(item).get(0), CONTAINER_ARGS_MAP.get(item).get(1), IMAGE_NAME, IMAGE_TAG, DOCKER_HUB_USER)
@@ -51,7 +51,6 @@ node {
 def imagePrune(imageName){
     try {
         sh "docker image prune -f"
-        sh "docker stop $imageName"
     } catch(error){}
 }
 
