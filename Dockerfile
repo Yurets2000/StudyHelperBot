@@ -7,12 +7,12 @@ COPY pom.xml pipeline/
 
 COPY src/ pipeline/src/
 
-COPY ${JAR_FILE} app.jar
-
-ADD ${JAR_LIB_FILE} lib/
-
 WORKDIR pipeline/
 
 RUN mvn clean install
+
+COPY ${JAR_FILE} app.jar
+
+ADD ${JAR_LIB_FILE} lib/
 
 ENTRYPOINT [ "java", "-jar", "app.jar"]
