@@ -24,8 +24,6 @@ public class StudyHelperBot extends Bot {
 
     public static void main(String[] args) {
         if(args == null || args.length != 2){
-            ApiContextInitializer.init();
-            Bot.runBot(new StudyHelperBot("1020755763:AAFB0c6uCLDBGcmIXf0ZZeLnqecG2SIjsZY", "StudyHelperBot"));
             log.error("You must run bot with 2 args - BotToken and BotName");
         } else {
             ApiContextInitializer.init();
