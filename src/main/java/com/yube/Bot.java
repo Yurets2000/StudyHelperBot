@@ -1,5 +1,6 @@
 package com.yube;
 
+import com.yube.utils.ExceptionHandler;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -11,7 +12,7 @@ import java.io.File;
 
 public abstract class Bot extends TelegramLongPollingBot {
 
-    private final String token, botName;
+    protected final String token, botName;
 
     protected Bot(String token, String botName){
         this.token = token;
@@ -22,7 +23,7 @@ public abstract class Bot extends TelegramLongPollingBot {
         try {
             new TelegramBotsApi().registerBot(newBot);
         } catch (TelegramApiException e) {
-            newBot.processTheException(e);
+            newBot.processException(e);
         }
     }
 
@@ -32,7 +33,7 @@ public abstract class Bot extends TelegramLongPollingBot {
             send.setText(text.trim());
             return execute(send);
         } catch (Exception e) {
-            processTheException(e);
+            processException(e);
             return null;
         }
     }
@@ -45,12 +46,14 @@ public abstract class Bot extends TelegramLongPollingBot {
             }
             return execute(send);
         } catch (TelegramApiException e) {
-            processTheException(e);
+            processException(e);
             return null;
         }
     }
 
-    protected abstract void processTheException(Exception e);
+    protected final void processException(Exception e){
+        ExceptionHandler.processException(e);
+    }
 
     public final String getBotUsername() {
         return botName;

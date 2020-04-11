@@ -1,9 +1,22 @@
 package com.yube;
 
+import com.yube.dao.PostgresTriggerDaoImpl;
+import com.yube.dao.TriggerDao;
+import com.yube.dto.Trigger;
+import com.yube.exceptions.ConfigurationException;
+import com.yube.exceptions.DatabaseException;
+import com.yube.redis.RedissonClientFactory;
 import org.apache.log4j.Logger;
+import org.redisson.api.RSet;
+import org.redisson.api.RedissonClient;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class StudyHelperBot extends Bot {
 
@@ -11,6 +24,8 @@ public class StudyHelperBot extends Bot {
 
     public static void main(String[] args) {
         if(args == null || args.length != 2){
+            ApiContextInitializer.init();
+            Bot.runBot(new StudyHelperBot("1020755763:AAFB0c6uCLDBGcmIXf0ZZeLnqecG2SIjsZY", "StudyHelperBot"));
             log.error("You must run bot with 2 args - BotToken and BotName");
         } else {
             ApiContextInitializer.init();
@@ -21,11 +36,20 @@ public class StudyHelperBot extends Bot {
 
     protected StudyHelperBot(String token, String botName) {
         super(token, botName);
-    }
-
-    @Override
-    protected void processTheException(Exception e) {
-        log.error(e.getMessage(), e);
+        try {
+            TriggerDao dao = new PostgresTriggerDaoImpl();
+            Set<Trigger> botTriggers =  dao.getBotTriggers(token);
+            RedissonClient client = RedissonClientFactory.getInstance().getRedissonClient();
+            RSet<Trigger> inMemoryCommonTriggers = client.getSet("common");
+            if(inMemoryCommonTriggers.isEmpty()){
+                Set<Trigger> commonTriggers =  dao.getCommonTriggers();
+                inMemoryCommonTriggers.addAll(commonTriggers);
+            }
+            RSet<Trigger> inMemoryBotTriggers = client.getSet(token);
+            inMemoryBotTriggers.addAll(botTriggers);
+        } catch (DatabaseException | ConfigurationException e) {
+            processException(e);
+        }
     }
 
     @Override
@@ -34,7 +58,27 @@ public class StudyHelperBot extends Bot {
         if (update.hasMessage() && update.getMessage().hasText()) {
             Message message = update.getMessage();
             long chatId = message.getChatId();
-            sendTextMessage(chatId, "Bot developing in progress, new features will be added soon...");
+            String text = message.getText().trim();
+            List<String> triggers = getTriggers();
+            if(triggers.contains(text)) {
+                sendTextMessage(chatId, "Have you just said \"" + text.toUpperCase() + "\"? Bruh...");
+            }
         }
+    }
+
+    private List<String> getTriggers(){
+        List<String> triggerValues = null;
+        try {
+            Set<Trigger> triggers = new HashSet<>();
+            RedissonClient client = RedissonClientFactory.getInstance().getRedissonClient();
+            RSet<Trigger> inMemoryCommonTriggers = client.getSet("common");
+            RSet<Trigger> inMemoryBotTriggers = client.getSet(token);
+            triggers.addAll(inMemoryCommonTriggers.readAll());
+            triggers.addAll(inMemoryBotTriggers.readAll());
+            triggerValues = triggers.stream().map(Trigger::getTriggerValue).collect(Collectors.toList());
+        } catch (ConfigurationException e) {
+            processException(e);
+        }
+        return triggerValues;
     }
 }
