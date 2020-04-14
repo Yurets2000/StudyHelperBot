@@ -91,7 +91,7 @@ public class StudyHelperAdminBot extends Bot {
                 }
             };
             channel.basicConsume("bot", true, deliverCallback, consumerTag -> {});
-            long sleepTime = 15 * 60 * 1000;
+            long sleepTime = 60 * 60 * 1000;
             Thread.sleep(sleepTime);
         } catch (ServiceConnectionException | ConfigurationException | IOException | TimeoutException | InterruptedException e) {
             processException(e);
