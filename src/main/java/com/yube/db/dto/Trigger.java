@@ -1,4 +1,4 @@
-package com.yube.dto;
+package com.yube.db.dto;
 
 import lombok.Data;
 import lombok.NonNull;
@@ -13,6 +13,7 @@ public class Trigger implements Serializable {
     private final int triggerId;
     @NonNull
     private final String triggerType;
+    private final String triggerSubType;
     private final String botToken;
     @NonNull
     private final String triggerValue;

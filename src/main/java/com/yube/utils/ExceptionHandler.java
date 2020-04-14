@@ -2,7 +2,7 @@ package com.yube.utils;
 
 import org.apache.log4j.Logger;
 
-public class ExceptionHandler {
+public final class ExceptionHandler {
 
     private static Logger log = Logger.getLogger(ExceptionHandler.class.getName());
 

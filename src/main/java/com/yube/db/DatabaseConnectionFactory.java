@@ -9,12 +9,12 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class ConnectionFactory {
+public final class DatabaseConnectionFactory {
 
     private Properties props;
-    private static ConnectionFactory connectionFactory;
+    private static DatabaseConnectionFactory databaseConnectionFactory;
 
-    private ConnectionFactory() throws DatabaseException, ConfigurationException {
+    private DatabaseConnectionFactory() throws DatabaseException, ConfigurationException {
         props = PropertiesHandler.getProperties("db.properties");
         try{
             Class.forName(props.getProperty("DB_DRIVER_CLASS"));
@@ -23,11 +23,11 @@ public class ConnectionFactory {
         }
     }
 
-    public static ConnectionFactory getInstance() throws DatabaseException, ConfigurationException {
-        if (connectionFactory == null) {
-            connectionFactory = new ConnectionFactory();
+    public static DatabaseConnectionFactory getInstance() throws DatabaseException, ConfigurationException {
+        if (databaseConnectionFactory == null) {
+            databaseConnectionFactory = new DatabaseConnectionFactory();
         }
-        return connectionFactory;
+        return databaseConnectionFactory;
     }
 
     public Connection getConnection() throws DatabaseException {

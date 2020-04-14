@@ -1,6 +1,6 @@
-package com.yube.dao;
+package com.yube.db.dao;
 
-import com.yube.dto.Trigger;
+import com.yube.db.dto.Trigger;
 import com.yube.exceptions.DatabaseException;
 
 import java.util.Set;

@@ -8,7 +8,7 @@ import org.redisson.config.Config;
 
 import java.util.Properties;
 
-public class RedissonClientFactory {
+public final class RedissonClientFactory {
 
     private RedissonClient client;
     private static RedissonClientFactory redissonClientFactory;

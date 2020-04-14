@@ -5,7 +5,7 @@ import com.yube.exceptions.ConfigurationException;
 import java.io.IOException;
 import java.util.Properties;
 
-public class PropertiesHandler {
+public final class PropertiesHandler {
 
     public static Properties getProperties(String path) throws ConfigurationException {
         Properties props = new Properties();
