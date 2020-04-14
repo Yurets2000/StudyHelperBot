@@ -82,10 +82,10 @@ public class StudyHelperClientBot extends Bot {
             if(actor != null){
                 ActorMessage actorMessage = new ActorMessage(
                         actor.getActorId(),
-                        String.format("Lecturer %s says: \"%s\" in chat %s",
+                        String.format("Lecturer %s says: \"%s\" in %s chat",
                                 actor.getActorName(),
                                 text,
-                                message.getChat().getTitle())
+                                message.getChat() == null ? "private" : message.getChat().getTitle())
                 );
                 publishMessage(actorMessage);
             }
