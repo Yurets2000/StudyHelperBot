@@ -50,16 +50,18 @@ public class StudyHelperAdminBot extends Bot {
             };
             ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
-            long period = 1L;
+
             /*Uncomment in prod*/
             /*
+            long period = 24 * 3600 * 1000;
             Calendar desired = Calendar.getInstance();
             desired.set(Calendar.HOUR_OF_DAY, 8);
             desired.set(Calendar.MINUTE, 30);
             desired.set(Calendar.SECOND, 0);
             long delay = desired.getTimeInMillis() - Calendar.getInstance().getTimeInMillis();
+            executor.scheduleAtFixedRate(task, delay, period,  TimeUnit.MILLISECONDS);
             */
-
+            long period = 1L;
             long delay  = 0;
             executor.scheduleAtFixedRate(task, delay, period,  TimeUnit.DAYS);
             long sleepTime = 24 * 3600 * 1000;
