@@ -48,7 +48,7 @@ public class StudyHelperAdminBot extends Bot {
                     readMessages();
                 }
             };
-            ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+            ScheduledExecutorService executor = Executors.newScheduledThreadPool(3);
 
 
             /*Uncomment in prod*/
@@ -59,7 +59,7 @@ public class StudyHelperAdminBot extends Bot {
             desired.set(Calendar.MINUTE, 30);
             desired.set(Calendar.SECOND, 0);
             long delay = desired.getTimeInMillis() - Calendar.getInstance().getTimeInMillis();
-            executor.scheduleAtFixedRate(task, delay, period,  TimeUnit.MILLISECONDS);
+            executor.scheduleAtFixedRate(task, delay, period,  TimeUnit.MILLISECOND);
             */
             long period = 1L;
             long delay  = 0;
