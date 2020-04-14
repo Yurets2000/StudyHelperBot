@@ -84,7 +84,6 @@ public abstract class Bot extends TelegramLongPollingBot {
                 ActorChat actorChat = actorChatDao.getActorChat(actor.getActorId(), chatId);
                 if (actorChat == null) {
                     actorChatDao.addActorChat(new ActorChat(actor.getActorId(), chatId));
-                    System.out.println("Registered");
                 }
             }
         } catch (DatabaseException | ConfigurationException e) {

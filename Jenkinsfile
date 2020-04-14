@@ -1,7 +1,8 @@
 def IMAGE_NAME="study-helper-bot"
 def CONTAINER_NAMES=["bot-container-1", "bot-container-2"]
-def CONTAINER_ARGS_MAP=["bot-container-1":["1020755763:AAFB0c6uCLDBGcmIXf0ZZeLnqecG2SIjsZY", "StudyHelperBot"],
-                        "bot-container-2":["1095393713:AAFplKsXVWmtJmxQxU14lubZvjNntw4jdbg", "StudyHelperBot2"]]
+def CONTAINER_ARGS_MAP=["bot-container-1":["client", "1020755763:AAFB0c6uCLDBGcmIXf0ZZeLnqecG2SIjsZY", "StudyHelperBot"],
+                        "bot-container-2":["client", "1095393713:AAFplKsXVWmtJmxQxU14lubZvjNntw4jdbg", "StudyHelperBot2"],
+                        "bot-admin-container-1": ["admin", "1119539876:AAG3iEutjtEImXw9XwtnerW0oKsDqjmSk6w", "StudyHelperAdminBot"]]
 
 def IMAGE_TAG="latest"
 def DOCKER_HUB_USER="yurets2000"
@@ -42,7 +43,7 @@ node {
     /*Зупинити та видалити контейнери, які використовували застаріле зображення, та запустити ботів на контейнерах з оновленим зображенням*/
     stage('Run App'){
         CONTAINER_NAMES.each{ item ->
-            runApp(item, CONTAINER_ARGS_MAP.get(item).get(0), CONTAINER_ARGS_MAP.get(item).get(1), IMAGE_NAME, IMAGE_TAG, DOCKER_HUB_USER)
+            runApp(item, CONTAINER_ARGS_MAP.get(item).get(0), CONTAINER_ARGS_MAP.get(item).get(1), CONTAINER_ARGS_MAP.get(item).get(2), IMAGE_NAME, IMAGE_TAG, DOCKER_HUB_USER)
         }
     }
 
@@ -71,8 +72,8 @@ def imagePull(imageName, dockerHubUser){
     echo "Updated image pulled"
 }
 
-def runApp(containerName, arg0, arg1, imageName, tag, dockerHubUser){
+def runApp(containerName, arg0, arg1, arg2, imageName, tag, dockerHubUser){
     sh "docker stop $containerName || true && docker rm $containerName || true"
-    sh "docker run -d --rm --network host --name $containerName $dockerHubUser/$imageName:$tag $arg0 $arg1"
+    sh "docker run -d --rm --network host --name $containerName $dockerHubUser/$imageName:$tag $arg0 $arg1 $arg2"
     echo "$containerName started"
 }

@@ -48,14 +48,19 @@ public class StudyHelperAdminBot extends Bot {
                     readMessages();
                 }
             };
-            ScheduledExecutorService executor = Executors.newScheduledThreadPool(3);
+            ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
             long delay  = 0;
             long period = 1L;
             executor.scheduleAtFixedRate(task, delay, period,  TimeUnit.DAYS);
-            readMessages();
-            long sleepTime = 180L * 24L * 3600L * 1000L;
-            Thread.sleep(sleepTime);
-        } catch (DatabaseException | ConfigurationException | InterruptedException e) {
+            long sleepTime = 24 * 3600 * 1000;
+            while (true) {
+                try {
+                    Thread.sleep(sleepTime);
+                } catch (InterruptedException e) {
+                    processException(e);
+                }
+            }
+        } catch (DatabaseException | ConfigurationException e) {
             processException(e);
         }
     }
