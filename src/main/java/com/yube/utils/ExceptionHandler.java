@@ -7,7 +7,6 @@ public final class ExceptionHandler {
     private static Logger log = Logger.getLogger(ExceptionHandler.class.getName());
 
     public static void processException(Exception e) {
-        e.printStackTrace();
-        //log.error(e.getMessage(), e);
+        log.error(e.getMessage(), e);
     }
 }
